@@ -2,484 +2,524 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>loikov.pro • Личный сайт • Админ-панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover, theme-color=#050510">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>loikov.pro • Портфолио • Игры • Админ</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      --bg: #050510;
+      --surface: rgba(14, 16, 28, 0.8);
+      --accent: #8b5cf6;
+      --accent2: #3b82f6;
+      --text: #e8ecf4;
+      --muted: #8892b0;
+      --border: rgba(255, 255, 255, 0.06);
+      --radius: 1.4rem;
+      --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
-      background: #050510;
-      color: #eaeef5;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.2rem;
-      background-image: radial-gradient(circle at 30% 20%, #1a1040 0%, #030311 90%);
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* анимированные частицы на фоне */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .particle {
-      position: absolute;
-      background: rgba(120, 100, 255, 0.25);
-      border-radius: 50%;
-      filter: blur(2px);
-      animation: floatUp linear infinite;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0); opacity: 0; }
-      15% { opacity: 0.7; }
-      85% { opacity: 0.2; }
-      100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
-    }
-
-    .main-container {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 1050px;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      gap: 1.6rem;
+      position: relative;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
     }
 
-    /* стеклянная карточка */
-    .glass-card {
-      background: rgba(12, 14, 25, 0.65);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      border-radius: 2.5rem;
-      border: 1px solid rgba(140, 120, 255, 0.15);
-      box-shadow: 0 30px 55px -15px rgba(0,0,0,0.7), 0 0 0 1px rgba(180,140,255,0.1);
-      padding: 2rem 2.2rem;
-      transition: 0.25s;
+    /* Анимированный фон */
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.45;
+      animation: orbPulse 16s ease-in-out infinite alternate;
+    }
+    .bg-orb-1 { width: 380px; height: 380px; background: #7c3aed; top: -15%; left: -10%; }
+    .bg-orb-2 { width: 300px; height: 300px; background: #2563eb; bottom: -10%; right: -8%; animation-delay: 5s; }
+    .bg-orb-3 { width: 260px; height: 260px; background: #a855f7; top: 55%; left: 50%; animation-delay: 9s; }
+    @keyframes orbPulse {
+      0% { transform: translate(0,0) scale(1); opacity: 0.4; }
+      100% { transform: translate(40px,-30px) scale(1.2); opacity: 0.6; }
     }
 
-    .header-row {
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+    }
+    @keyframes gridMove {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(50px,50px); }
+    }
+
+    /* Шапка */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(8, 8, 20, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.9rem 1.4rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
       gap: 1rem;
     }
     .logo {
-      font-size: 2.4rem;
-      font-weight: 750;
-      background: linear-gradient(135deg, #b47aff, #4d9eff);
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c084fc, #60a5fa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.5px;
     }
-    .settings-badge {
-      background: rgba(255, 200, 50, 0.12);
-      border: 1px solid rgba(255, 180, 40, 0.4);
-      color: #ffd966;
-      border-radius: 2rem;
-      padding: 0.4rem 1.3rem;
-      font-weight: 600;
-      font-size: 0.8rem;
-      letter-spacing: 0.4px;
-      cursor: pointer;
-      transition: 0.2s;
-      backdrop-filter: blur(8px);
+    .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.6rem;
     }
-    .settings-badge:hover {
-      background: rgba(255, 180, 40, 0.25);
-      box-shadow: 0 0 18px rgba(255, 180, 40, 0.3);
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 1.5rem 0 1.8rem;
-    }
-    .nav-btn {
-      background: rgba(20, 18, 35, 0.7);
-      border: 1px solid rgba(255,255,255,0.05);
-      color: #b9c2d4;
-      padding: 0.65rem 1.6rem;
-      border-radius: 3rem;
-      font-weight: 550;
-      backdrop-filter: blur(8px);
+    .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 1.2rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: 0.2s;
-      font-size: 0.9rem;
-      letter-spacing: 0.2px;
+      backdrop-filter: blur(8px);
     }
-    .nav-btn:hover {
-      border-color: #7a6ff0;
-      background: rgba(90, 70, 220, 0.2);
-      color: white;
-      transform: translateY(-1px);
-    }
-    .nav-btn.active {
-      background: linear-gradient(120deg, #5b4bda, #3f8ef0);
-      border-color: transparent;
-      color: white;
-      box-shadow: 0 10px 22px #4b3cc9a0;
-    }
-    .nav-btn.admin-locked {
+    .icon-btn:active { transform: scale(0.92); background: rgba(139,92,246,0.3); }
+
+    /* Основной контент */
+    .main-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1rem calc(80px + var(--safe-bottom));
       position: relative;
-    }
-    .nav-btn.admin-locked::after {
-      content: "🔒";
-      margin-left: 6px;
-      font-size: 0.8rem;
-    }
-    .nav-btn.admin-unlocked::after {
-      content: "🔓";
-      margin-left: 6px;
-      font-size: 0.8rem;
+      z-index: 2;
+      -webkit-overflow-scrolling: touch;
     }
 
     .section {
       display: none;
-      animation: fadeMove 0.35s ease;
+      animation: fadeInUp 0.35s ease;
     }
-    .section.active-section {
-      display: block;
-    }
-    @keyframes fadeMove {
-      0% { opacity: 0.5; transform: translateY(10px); }
+    .section.active-section { display: block; }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(16px); }
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    .news-feed {
-      display: flex;
-      flex-direction: column;
-      gap: 1.3rem;
-      margin-top: 1rem;
-    }
-    .news-card {
-      background: rgba(22, 20, 40, 0.5);
-      backdrop-filter: blur(8px);
-      border-radius: 1.8rem;
-      padding: 1.3rem 1.6rem;
-      border-left: 4px solid #6d5df0;
-      transition: 0.2s;
-    }
-    .news-card:hover {
-      background: rgba(35, 32, 60, 0.6);
-      border-left-color: #4ba0ff;
-    }
-    .news-meta {
-      font-size: 0.75rem;
-      color: #99a5c0;
-      margin-top: 0.4rem;
-      display: flex;
-      gap: 1rem;
-    }
-
-    /* Экран ввода пароля */
-    .login-screen {
-      background: rgba(16, 14, 30, 0.8);
-      border-radius: 2rem;
-      padding: 2.5rem;
-      text-align: center;
-      border: 1px solid rgba(140, 120, 255, 0.25);
-      max-width: 420px;
-      margin: 1.5rem auto;
-      backdrop-filter: blur(18px);
-    }
-    .login-screen h3 {
-      margin-bottom: 1.2rem;
+    .section-title {
       font-size: 1.5rem;
-    }
-    .login-screen input {
-      width: 100%;
-      background: #0a0a1a;
-      border: 1px solid #31315a;
-      border-radius: 1.2rem;
-      padding: 0.9rem 1.2rem;
-      color: #f0f2ff;
-      font-family: inherit;
-      margin: 1rem 0;
-      font-size: 1rem;
-      text-align: center;
-      letter-spacing: 2px;
-    }
-    .login-screen .hint {
-      font-size: 0.75rem;
-      color: #777;
-      margin-top: 0.8rem;
+      font-weight: 750;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: -0.3px;
     }
 
-    /* Админ-панель (после входа) */
-    .admin-panel {
-      background: rgba(16, 14, 30, 0.7);
-      border-radius: 2rem;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      border: 1px solid rgba(100, 80, 255, 0.3);
-    }
-    input, textarea {
-      width: 100%;
-      background: #0a0a1a;
-      border: 1px solid #31315a;
-      border-radius: 1.2rem;
-      padding: 0.8rem 1rem;
-      color: #f0f2ff;
-      font-family: inherit;
-      margin: 0.6rem 0;
-      resize: vertical;
-    }
-    .btn {
-      background: linear-gradient(135deg, #5e4bdb, #3478f0);
-      border: none;
-      color: white;
-      font-weight: 600;
-      padding: 0.7rem 1.5rem;
-      border-radius: 2.5rem;
-      cursor: pointer;
+    /* Карточки */
+    .card {
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      border: 1px solid var(--border);
       transition: 0.2s;
+      margin-bottom: 0.9rem;
+    }
+    .card:active { transform: scale(0.98); }
+    .card-accent {
+      border-left: 4px solid var(--accent);
+      background: rgba(30, 22, 50, 0.55);
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(139,92,246,0.2);
+      color: #c4b5fd;
+      border-radius: 2rem;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 600;
       letter-spacing: 0.3px;
     }
-    .btn:hover {
-      filter: brightness(1.2);
-      box-shadow: 0 10px 20px #3b30c0;
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #5b5baf;
-      padding: 0.5rem 1.2rem;
-      margin-left: 0.5rem;
-      border-radius: 2rem;
-      color: #ccc;
-      cursor: pointer;
-    }
-    .delete-btn {
-      background: rgba(255,80,80,0.2);
-      border: 1px solid #f55;
-      color: #ffaaaa;
-      border-radius: 2rem;
-      padding: 0.3rem 1rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .delete-btn:hover {
-      background: rgba(255,80,80,0.4);
-    }
-    .logout-btn {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #ccc;
-      padding: 0.4rem 1.2rem;
-      border-radius: 2rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-      margin-bottom: 1rem;
-      transition: 0.2s;
-    }
-    .logout-btn:hover {
-      background: rgba(255,80,80,0.2);
-      border-color: #f55;
-    }
-    hr {
-      border-color: rgba(255,255,255,0.06);
-      margin: 1.8rem 0;
-    }
-    .portfolio-grid, .app-grid {
+
+    .grid-2, .grid-3 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
-      gap: 1.3rem;
-      margin-top: 1.2rem;
+      gap: 0.8rem;
     }
-    .mini-card {
-      background: #11132b;
-      border-radius: 1.6rem;
-      padding: 1.3rem;
-      border: 1px solid #2e3250;
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+
+    .stat-row {
+      display: flex;
+      gap: 0.7rem;
+      margin: 1rem 0;
+    }
+    .stat {
+      flex: 1;
+      background: rgba(20,18,35,0.6);
+      border-radius: 1.2rem;
+      padding: 0.9rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #c084fc, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    /* Модальное окно настроек */
+    /* Кнопки */
+    .btn {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border: none;
+      color: #fff;
+      font-weight: 650;
+      padding: 0.65rem 1.4rem;
+      border-radius: 2.5rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: 0.2s;
+      box-shadow: 0 0 20px rgba(124,58,237,0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      touch-action: manipulation;
+    }
+    .btn:active { transform: scale(0.94); filter: brightness(1.3); }
+    .btn-sm { padding: 0.45rem 1rem; font-size: 0.75rem; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: none;
+      color: #ccc;
+    }
+    .btn-danger {
+      background: rgba(239,68,68,0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      box-shadow: none;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.7rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: rgba(10,10,24,0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      -webkit-appearance: none;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #7c3aed;
+      box-shadow: 0 0 18px rgba(124,58,237,0.3);
+    }
+
+    /* Админка */
+    .login-box {
+      max-width: 360px;
+      margin: 2rem auto;
+      text-align: center;
+      background: rgba(18,16,35,0.75);
+      border-radius: 1.6rem;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+    }
+    .admin-news-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(18,16,30,0.5);
+      border-radius: 1rem;
+      padding: 0.6rem 1rem;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    /* Игры */
+    .game-area {
+      background: rgba(12,10,25,0.55);
+      border-radius: 1.4rem;
+      padding: 1.4rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Нижняя мобильная навигация */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      background: rgba(10, 10, 22, 0.82);
+      backdrop-filter: blur(26px);
+      -webkit-backdrop-filter: blur(26px);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0.5rem 0.3rem var(--safe-bottom);
+      height: calc(64px + var(--safe-bottom));
+    }
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      background: none;
+      border: none;
+      color: #7a80a0;
+      font-family: inherit;
+      font-size: 0.65rem;
+      font-weight: 550;
+      cursor: pointer;
+      padding: 0.4rem 0.6rem;
+      border-radius: 1rem;
+      transition: 0.2s;
+      min-width: 56px;
+      touch-action: manipulation;
+    }
+    .nav-tab .tab-icon { font-size: 1.6rem; transition: 0.2s; }
+    .nav-tab.active {
+      color: #fff;
+    }
+    .nav-tab.active .tab-icon {
+      filter: drop-shadow(0 0 10px #a78bfa);
+    }
+    .nav-tab:active { transform: scale(0.9); }
+
+    /* Модальное окно для настроек */
     .modal-overlay {
       display: none;
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      inset: 0;
       background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
       z-index: 100;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
     }
-    .modal-overlay.show {
-      display: flex;
-    }
+    .modal-overlay.show { display: flex; }
     .modal {
-      background: #12142a;
+      background: #13152d;
       border: 1px solid #4b40b0;
       border-radius: 2rem;
-      padding: 2rem;
-      max-width: 400px;
-      width: 90%;
+      padding: 2rem 1.5rem;
+      max-width: 380px;
+      width: 100%;
       text-align: center;
     }
-    .lock-icon {
-      font-size: 3rem;
-      margin-bottom: 0.8rem;
+
+    @media (min-width: 768px) {
+      .main-scroll {
+        max-width: 750px;
+        margin: 0 auto;
+        padding-bottom: 2rem;
+      }
+      .bottom-nav {
+        max-width: 750px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2rem 2rem 0 0;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-bottom: none;
+      }
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+      .header { justify-content: center; }
+      .logo { font-size: 1.8rem; }
+    }
+
+    @media (min-width: 1024px) {
+      .main-scroll { max-width: 900px; }
+      .bottom-nav { max-width: 900px; }
     }
   </style>
 </head>
 <body>
-  <!-- частицы -->
-  <div class="particles" id="particlesContainer"></div>
+  <div class="bg-ambient">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+  <div class="bg-grid"></div>
 
-  <!-- Модальное окно настроек (ввод пароля) -->
-  <div class="modal-overlay" id="settingsModal">
-    <div class="modal">
-      <div class="lock-icon">🔐</div>
-      <h3>Доступ к админ-панели</h3>
-      <p style="color:#aaa; margin:0.6rem 0;">Введи пароль для разблокировки</p>
-      <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off">
-      <div style="display:flex; gap:0.8rem; justify-content:center; margin-top:1rem;">
-        <button class="btn" id="confirmPasswordBtn">Войти</button>
-        <button class="btn-outline" id="cancelModalBtn">Отмена</button>
+  <!-- Шапка -->
+  <header class="header">
+    <div class="logo">loikov.pro</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="settingsBtn" title="Настройки">⚙️</button>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <div class="main-scroll" id="mainScroll">
+    <!-- Новости -->
+    <div id="news" class="section active-section">
+      <div class="section-title">📰 Лента новостей <span class="badge">live</span></div>
+      <div class="stat-row">
+        <div class="stat"><div class="stat-val" id="newsCount">0</div><div style="color:var(--muted);font-size:0.7rem;">публикаций</div></div>
+        <div class="stat"><div class="stat-val">24/7</div><div style="color:var(--muted);font-size:0.7rem;">онлайн</div></div>
       </div>
-      <p class="hint" id="passwordHint" style="color:#f55; display:none;">Неверный пароль</p>
+      <div id="newsContainer"></div>
+      <p id="emptyNews" style="color:var(--muted);text-align:center;margin-top:2rem;display:none;">Пока нет новостей ✨</p>
+    </div>
+
+    <!-- Портфолио -->
+    <div id="portfolio" class="section">
+      <div class="section-title">💼 Портфолио</div>
+      <div class="grid-2">
+        <div class="card"><strong>🛸 Cosmo UI</strong><p style="color:var(--muted);font-size:0.8rem;">React компоненты</p><span class="badge">React</span></div>
+        <div class="card"><strong>📊 DataViz</strong><p style="color:var(--muted);font-size:0.8rem;">Аналитика</p><span class="badge">D3.js</span></div>
+        <div class="card"><strong>🎨 PaletteGen</strong><p style="color:var(--muted);font-size:0.8rem;">Цвета</p><span class="badge">JS</span></div>
+        <div class="card"><strong>🔮 3D Site</strong><p style="color:var(--muted);font-size:0.8rem;">Three.js</p><span class="badge">3D</span></div>
+      </div>
+    </div>
+
+    <!-- Приложения -->
+    <div id="apps" class="section">
+      <div class="section-title">📱 Приложения</div>
+      <div class="card card-accent">
+        <strong>⏱️ FlowPomodoro</strong>
+        <p style="color:var(--muted);font-size:0.8rem;">Таймер + задачи</p>
+        <div style="font-size:2rem;margin:0.4rem 0;">🍅 25:00</div>
+        <button class="btn btn-sm" onclick="alert('Демо FlowPomodoro')">Запустить</button>
+      </div>
+      <div class="card card-accent">
+        <strong>📋 QuickMemo</strong>
+        <p style="color:var(--muted);font-size:0.8rem;">Умные заметки</p>
+        <button class="btn btn-sm" onclick="alert('Демо QuickMemo')">Открыть</button>
+      </div>
+    </div>
+
+    <!-- Игры -->
+    <div id="games" class="section">
+      <div class="section-title">🎮 Мини-игры</div>
+      <div class="game-area" style="margin-bottom:0.8rem;">
+        <strong>👆 Кликер-челлендж</strong>
+        <p style="color:var(--muted);font-size:0.8rem;">Жми 5 секунд!</p>
+        <div class="stat-val" id="clickerScore" style="font-size:3rem;">0</div>
+        <p id="clickerTimer" style="color:var(--muted);">5.0 сек</p>
+        <button class="btn" id="clickerBtn" style="margin:0.4rem;">🖱️ ЖМИ!</button>
+        <button class="btn btn-outline btn-sm" id="resetClicker">Сброс</button>
+        <p style="font-size:0.7rem;margin-top:0.4rem;">🏆 Рекорд: <span id="clickerRecord">0</span></p>
+      </div>
+      <div class="game-area">
+        <strong>🎯 Угадай число</strong>
+        <p style="color:var(--muted);font-size:0.8rem;">От 1 до 100</p>
+        <div style="display:flex;gap:0.4rem;justify-content:center;align-items:center;margin:0.7rem 0;flex-wrap:wrap;">
+          <input type="number" id="guessInput" placeholder="Число" style="width:110px;text-align:center;">
+          <button class="btn btn-sm" id="guessBtn">Проверить</button>
+        </div>
+        <p id="guessFeedback" style="font-weight:600;"></p>
+      </div>
+    </div>
+
+    <!-- Админка -->
+    <div id="admin" class="section">
+      <div class="section-title">🔐 Админ-панель</div>
+      <div id="adminLoginScreen" class="login-box">
+        <div style="font-size:3rem;">🔒</div>
+        <h3>Доступ ограничен</h3>
+        <p style="color:var(--muted);margin:0.5rem 0;">Введи пароль</p>
+        <input type="password" id="adminPassInput" placeholder="••••••••" autocomplete="off" style="text-align:center;letter-spacing:3px;">
+        <button class="btn" id="adminLoginBtn" style="width:100%;margin-top:1rem;">Войти</button>
+        <p id="adminError" style="color:#f55;margin-top:0.5rem;display:none;">Неверный пароль</p>
+        <p style="font-size:0.65rem;color:#444;margin-top:0.8rem;">admin123</p>
+      </div>
+      <div id="adminContent" style="display:none;">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:0.8rem;">
+          <button class="btn btn-outline btn-sm" id="adminLogoutBtn">🚪 Выйти</button>
+        </div>
+        <div class="card">
+          <strong>📝 Новая публикация</strong>
+          <input type="text" id="newsTitle" placeholder="Заголовок" style="margin:0.5rem 0;">
+          <textarea id="newsContent" rows="3" placeholder="Содержание..."></textarea>
+          <button class="btn btn-sm" id="addNewsBtn" style="margin-top:0.5rem;">➕ Опубликовать</button>
+        </div>
+        <strong style="display:block;margin:1rem 0 0.5rem;">📋 Все новости</strong>
+        <div id="adminNewsList"></div>
+      </div>
     </div>
   </div>
 
-  <div class="main-container">
-    <div class="glass-card">
-      <div class="header-row">
-        <div class="logo">loikov.pro</div>
-        <div class="settings-badge" id="openSettingsBtn">
-          ⚙️ Настройки
-        </div>
+  <!-- Нижняя навигация -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" data-section="news"><span class="tab-icon">📰</span>Новости</button>
+    <button class="nav-tab" data-section="portfolio"><span class="tab-icon">💼</span>Портфолио</button>
+    <button class="nav-tab" data-section="apps"><span class="tab-icon">📱</span>Приложения</button>
+    <button class="nav-tab" data-section="games"><span class="tab-icon">🎮</span>Игры</button>
+    <button class="nav-tab" data-section="admin" id="adminTab"><span class="tab-icon">🔐</span>Админ</button>
+  </nav>
+
+  <!-- Модалка настроек -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <div style="font-size:3rem;">⚙️</div>
+      <h3>Разблокировка админки</h3>
+      <p style="color:var(--muted);margin:0.5rem 0;">Введи пароль</p>
+      <input type="password" id="modalPassInput" placeholder="••••••••" autocomplete="off" style="text-align:center;letter-spacing:3px;">
+      <div style="display:flex;gap:0.6rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
+        <button class="btn" id="modalConfirmBtn">Войти</button>
+        <button class="btn btn-outline btn-sm" id="modalCancelBtn">Отмена</button>
       </div>
-
-      <nav>
-        <button class="nav-btn active" data-section="news">📰 Новости</button>
-        <button class="nav-btn" data-section="portfolio">💼 Портфолио</button>
-        <button class="nav-btn" data-section="apps">📱 Приложения</button>
-        <button class="nav-btn" data-section="games">🎮 Игры</button>
-        <button class="nav-btn admin-locked" data-section="admin" id="adminNavBtn">🔒 Админка</button>
-      </nav>
-
-      <!-- Новости -->
-      <div id="news" class="section active-section">
-        <h2 style="display:flex; gap:0.5rem;">📰 Мои новости <span style="font-size:0.9rem; opacity:0.7;">(live)</span></h2>
-        <div id="newsContainer" class="news-feed">
-          <!-- динамические новости -->
-        </div>
-        <p id="emptyNewsMsg" style="color:#7e86a0; margin-top:1rem; display:none;">Пока нет новостей.</p>
-      </div>
-
-      <!-- Портфолио -->
-      <div id="portfolio" class="section">
-        <h2>💼 Проекты</h2>
-        <div class="portfolio-grid">
-          <div class="mini-card"><strong>🛸 Cosmo UI</strong><p>Библиотека компонентов React</p></div>
-          <div class="mini-card"><strong>📊 DataViz</strong><p>Дашборд аналитики</p></div>
-          <div class="mini-card"><strong>🎨 ColorGen</strong><p>Генератор палитр</p></div>
-          <div class="mini-card"><strong>🔮 Portfolio 3D</strong><p>Three.js интерактив</p></div>
-        </div>
-      </div>
-
-      <!-- Приложения -->
-      <div id="apps" class="section">
-        <h2>📱 Приложения</h2>
-        <div class="app-grid">
-          <div class="mini-card"><strong>⏱️ FlowPomodoro</strong><p>Таймер + задачи</p></div>
-          <div class="mini-card"><strong>📋 QuickMemo</strong><p>Заметки онлайн</p></div>
-          <div class="mini-card"><strong>💰 CryptoWatch</strong><p>Отслеживание курсов</p></div>
-        </div>
-      </div>
-
-      <!-- Игры -->
-      <div id="games" class="section">
-        <h2>🎮 Мини-игры</h2>
-        <div style="background:#0d0f20; border-radius:1.6rem; padding:1.4rem; text-align:center;">
-          <h3>👆 Кликер (5 сек)</h3>
-          <p id="clickerScore" style="font-size:3rem; font-weight:700; color:#b794ff;">0</p>
-          <button class="btn" id="clickerBtn">ЖМИ!</button>
-          <p id="clickerTimer">5.0 сек</p>
-          <button class="btn-outline" id="resetClicker">Сброс</button>
-        </div>
-        <div style="background:#0d0f20; border-radius:1.6rem; padding:1.4rem; text-align:center; margin-top:1.2rem;">
-          <h3>🎯 Угадай число</h3>
-          <p>Я загадал от 1 до 100</p>
-          <input type="number" id="guessInput" placeholder="Твоё число" style="width:120px; text-align:center; display:inline-block;">
-          <button class="btn" id="guessBtn" style="margin-left:0.5rem;">Проверить</button>
-          <p id="guessFeedback" style="margin-top:0.8rem; font-weight:600;"></p>
-        </div>
-      </div>
-
-      <!-- Админ-панель (защищена) -->
-      <div id="admin" class="section">
-        <h2>🔐 Админ-панель</h2>
-        <!-- Экран входа -->
-        <div id="adminLoginScreen" class="login-screen">
-          <h3>🔒 Доступ ограничен</h3>
-          <p style="color:#aaa;">Для управления новостями введи пароль</p>
-          <input type="password" id="adminPasswordInput" placeholder="Пароль" autocomplete="off">
-          <button class="btn" id="adminLoginBtn">Войти</button>
-          <p class="hint" id="adminLoginError" style="color:#f55; display:none;">Неверный пароль</p>
-          <p class="hint" style="color:#666;">Подсказка: admin123</p>
-        </div>
-        <!-- Контент админки (скрыт до входа) -->
-        <div id="adminContent" style="display:none;">
-          <button class="logout-btn" id="adminLogoutBtn">🚪 Выйти из админки</button>
-          <div class="admin-panel">
-            <h3>📝 Новая публикация</h3>
-            <input type="text" id="newsTitle" placeholder="Заголовок новости">
-            <textarea id="newsContent" rows="3" placeholder="Текст новости..."></textarea>
-            <div style="display:flex; gap:0.8rem; align-items:center; margin-top:0.5rem;">
-              <button class="btn" id="addNewsBtn">➕ Опубликовать</button>
-              <span style="font-size:0.75rem; color:#777;">сохраняется локально</span>
-            </div>
-          </div>
-          <div style="margin-top:1.5rem;">
-            <h3>📋 Все новости</h3>
-            <div id="adminNewsList" style="margin-top:1rem;"></div>
-          </div>
-        </div>
-      </div>
-
-      <hr>
-      <footer style="text-align:center; color:#6f7390; font-size:0.8rem;">© 2025 loikov.pro — твоя цифровая вселенная</footer>
+      <p id="modalError" style="color:#f55;margin-top:0.5rem;display:none;">Неверный пароль</p>
     </div>
   </div>
 
   <script>
     (function() {
-      // ========== ЧАСТИЦЫ ==========
-      const particlesContainer = document.getElementById('particlesContainer');
-      for (let i=0; i<40; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const size = Math.random()*5 + 2;
-        p.style.width = size+'px';
-        p.style.height = size+'px';
-        p.style.left = Math.random()*100+'%';
-        p.style.animationDuration = (Math.random()*12 + 10)+'s';
-        p.style.animationDelay = Math.random()*8+'s';
-        particlesContainer.appendChild(p);
-      }
+      const ADMIN_PASS = 'admin123';
+      let adminLoggedIn = false;
 
-      // ========== НАВИГАЦИЯ ==========
-      const navBtns = document.querySelectorAll('.nav-btn');
+      // ========== Навигация ==========
       const sections = {
         news: document.getElementById('news'),
         portfolio: document.getElementById('portfolio'),
@@ -487,128 +527,59 @@
         games: document.getElementById('games'),
         admin: document.getElementById('admin')
       };
+      const navTabs = document.querySelectorAll('.nav-tab');
 
       function switchSection(id) {
         Object.values(sections).forEach(s => s.classList.remove('active-section'));
         if (sections[id]) sections[id].classList.add('active-section');
-        navBtns.forEach(b => b.classList.remove('active'));
-        const targetBtn = document.querySelector(`.nav-btn[data-section="${id}"]`);
-        if (targetBtn) targetBtn.classList.add('active');
+        navTabs.forEach(t => t.classList.remove('active'));
+        const tab = document.querySelector(`.nav-tab[data-section="${id}"]`);
+        if (tab) tab.classList.add('active');
+        document.getElementById('mainScroll').scrollTop = 0;
       }
 
-      navBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const sectionId = e.currentTarget.getAttribute('data-section');
-          if (sectionId) switchSection(sectionId);
+      navTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const id = tab.getAttribute('data-section');
+          if (id) switchSection(id);
         });
       });
 
-      // ========== АДМИН-АВТОРИЗАЦИЯ ==========
-      const ADMIN_PASSWORD = 'admin123'; // 🔑 Поменяй здесь пароль
-      let adminLoggedIn = false;
-
+      // ========== Админка ==========
       const adminLoginScreen = document.getElementById('adminLoginScreen');
       const adminContent = document.getElementById('adminContent');
-      const adminPasswordInput = document.getElementById('adminPasswordInput');
+      const adminPassInput = document.getElementById('adminPassInput');
       const adminLoginBtn = document.getElementById('adminLoginBtn');
-      const adminLoginError = document.getElementById('adminLoginError');
+      const adminError = document.getElementById('adminError');
       const adminLogoutBtn = document.getElementById('adminLogoutBtn');
-      const adminNavBtn = document.getElementById('adminNavBtn');
+      const adminTab = document.getElementById('adminTab');
 
       function updateAdminUI() {
         if (adminLoggedIn) {
-          adminLoginScreen.style.display = 'none';
-          adminContent.style.display = 'block';
-          adminNavBtn.classList.remove('admin-locked');
-          adminNavBtn.classList.add('admin-unlocked');
-          adminNavBtn.innerHTML = '🔓 Админка';
+          if(adminLoginScreen) adminLoginScreen.style.display = 'none';
+          if(adminContent) adminContent.style.display = 'block';
+          if(adminTab) adminTab.querySelector('.tab-icon').textContent = '🔓';
           renderAdminNewsList();
         } else {
-          adminLoginScreen.style.display = 'block';
-          adminContent.style.display = 'none';
-          adminNavBtn.classList.add('admin-locked');
-          adminNavBtn.classList.remove('admin-unlocked');
-          adminNavBtn.innerHTML = '🔒 Админка';
-          adminPasswordInput.value = '';
-          adminLoginError.style.display = 'none';
+          if(adminLoginScreen) adminLoginScreen.style.display = 'block';
+          if(adminContent) adminContent.style.display = 'none';
+          if(adminTab) adminTab.querySelector('.tab-icon').textContent = '🔐';
+          if(adminPassInput) adminPassInput.value = '';
+          if(adminError) adminError.style.display = 'none';
         }
       }
 
-      adminLoginBtn.addEventListener('click', () => {
-        if (adminPasswordInput.value === ADMIN_PASSWORD) {
+      adminLoginBtn?.addEventListener('click', () => {
+        if (adminPassInput.value === ADMIN_PASS) {
           adminLoggedIn = true;
           updateAdminUI();
         } else {
-          adminLoginError.style.display = 'block';
-          adminPasswordInput.value = '';
+          if(adminError) adminError.style.display = 'block';
+          adminPassInput.value = '';
         }
       });
+      adminPassInput?.addEventListener('keydown', e => { if(e.key==='Enter') adminLoginBtn.click(); });
+      adminLogoutBtn?.addEventListener('click', () => { adminLoggedIn = false; updateAdminUI(); });
 
-      adminPasswordInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') adminLoginBtn.click();
-      });
-
-      adminLogoutBtn.addEventListener('click', () => {
-        adminLoggedIn = false;
-        updateAdminUI();
-      });
-
-      // Начальное состояние
-      updateAdminUI();
-
-      // ========== МОДАЛЬНОЕ ОКНО НАСТРОЕК ==========
-      const settingsModal = document.getElementById('settingsModal');
-      const openSettingsBtn = document.getElementById('openSettingsBtn');
-      const cancelModalBtn = document.getElementById('cancelModalBtn');
-      const confirmPasswordBtn = document.getElementById('confirmPasswordBtn');
-      const passwordInput = document.getElementById('passwordInput');
-      const passwordHint = document.getElementById('passwordHint');
-
-      openSettingsBtn.addEventListener('click', () => {
-        settingsModal.classList.add('show');
-        passwordInput.value = '';
-        passwordHint.style.display = 'none';
-        passwordInput.focus();
-      });
-
-      cancelModalBtn.addEventListener('click', () => {
-        settingsModal.classList.remove('show');
-      });
-
-      settingsModal.addEventListener('click', (e) => {
-        if (e.target === settingsModal) settingsModal.classList.remove('show');
-      });
-
-      confirmPasswordBtn.addEventListener('click', () => {
-        if (passwordInput.value === ADMIN_PASSWORD) {
-          adminLoggedIn = true;
-          updateAdminUI();
-          settingsModal.classList.remove('show');
-          switchSection('admin'); // Переключаем на админку
-        } else {
-          passwordHint.style.display = 'block';
-          passwordInput.value = '';
-        }
-      });
-
-      passwordInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') confirmPasswordBtn.click();
-      });
-
-      // ========== НОВОСТИ (LocalStorage) ==========
-      const STORAGE_KEY = 'loikov_news';
-      let newsArray = [];
-
-      function loadNews() {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          try { newsArray = JSON.parse(stored); } catch(e){ newsArray = []; }
-        } else {
-          newsArray = [
-            { id: Date.now()+1, title: 'Добро пожаловать на loikov.pro', content: 'Это твой новый крутой сайт. Администрируй новости через защищённую панель.', date: new Date().toISOString() },
-            { id: Date.now()+2, title: 'Запуск админ-панели', content: 'Теперь можешь добавлять, редактировать и удалять новости после входа.', date: new Date().toISOString() }
-          ];
-          saveNews();
-        }
-      }
-      function save
+      // ========== Модалка настроек ==========
+      const settingsModal = document.g
